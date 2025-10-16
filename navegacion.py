@@ -1,4 +1,6 @@
 from pathlib import Path
+import config
+
 
 def obtenerDirectorio():
     directorio =Path.cwd()
@@ -27,9 +29,8 @@ def explorar(elemento,dirBase=None):
 
 def obtener_objetos(directorio):
     while(1):
-        # elementos_a_buscar = input("Ingrese los nombres de los muestreos del osciloscopio a graficar, separados por comas. (Ejemplo: ALL0001, ALL0000): ")
-        # elementos_a_buscar = "ALL0004, ALL0003, ALL0005, ALL0006"
-        elementos_a_buscar = "ALL0012, ALL0013"
+        print(f"Buscando los muestreos {config.SEARCH} en el directorio {directorio.resolve()}...")
+        elementos_a_buscar = config.SEARCH
         objetos = buscar(directorio,elementos_a_buscar)
         if objetos == "" or objetos is None:
             input_s = ""

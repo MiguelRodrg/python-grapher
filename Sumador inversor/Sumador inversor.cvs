@@ -1,0 +1,3 @@
+Channel	Frequency	Period	PK-PK	Probe attenuation	Voltage per ADC value	Time interval
+CH1	1.000kHz	1.000ms	5.880V	1X	2.500000mV	0.40000uS
+CH2	1.000kHz	1.000ms	1.040V	1X	2.500000mV	0.40000uS

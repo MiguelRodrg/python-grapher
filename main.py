@@ -1,7 +1,12 @@
 from navegacion import *
 from data_manage import *
 from Plot import *
+import config
 import matplotlib.pyplot as plt
+
+# config.SEARCH = input("Ingrese los nombres de los muestreos del osciloscopio a graficar, separados por comas. (Ejemplo: ALL0001, ALL0000): ")
+# config.SEARCH = "ALL0004"
+config.SEARCH="Sumador inversor"
 
 def main():
     directorio = obtenerDirectorio()

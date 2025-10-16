@@ -1,5 +1,5 @@
 import pandas as pd
-
+from Specific_osc import *
 print("Pandas importado")
 
 def obtener_mediciones(mediciones):
@@ -72,21 +72,26 @@ def multiplicar_ganancia():
                     break
     return(ganancia)
 
-# def escribir_metadatos(archivo):
-#     with open(archivo)
-
 
 def leer_cvs2(archivo):
     tabla = pd.read_csv(archivo.resolve(),header=None)
-    inicio_datos = detect_data_start(tabla)
-    if inicio_datos is None:
+    fila,columnas = detect_data_start(tabla)
+    encabezados=["Tiempo","Voltaje"]
+    if fila is None or columnas is None:
         print(f"No se pudo detectar los datos en el archivo {archivo.name}.")
         return None
-    tiempo = tabla[inicio_datos[1][0]][inicio_datos[0]:]
-    voltajes = []
-    for indice in inicio_datos[1][1:]:
-        voltajes.append(tabla[indice][inicio_datos[0]:])
-    return tabla
+    new_table = tabla.iloc[fila:,columnas]
+    new_table = new_table.apply(pd.to_numeric, errors='coerce')
+    if fila > 0:
+        encabezados[0]= tabla.iloc[fila-1,columnas[0]]
+        for i in columnas[1:]:
+            if  len(encabezados) > i:
+                encabezados[i] = tabla.iloc[fila-1,columnas[i]]
+            else:
+                encabezados.append(tabla.iloc[fila-1,columnas[i]])
+    new_table.columns = encabezados
+    new_table.attrs,common = usual_metadata(tabla,new_table,archivo.name,archivo.parent.name,archivo.parent.resolve())
+    return new_table
 
 
 
@@ -96,15 +101,15 @@ def detect_data_start(df, min_numeric_cols=2, check_depth=10):
     numeric_mask = df.apply(pd.to_numeric, errors='coerce').notna()
 
     for i in range(n_rows - check_depth):
-        num_cols = numeric_mask.iloc[i].sum()
+        num_cols = numeric_mask.iloc[i].sum() #Sum of numeric values in the row i
 
-        if num_cols >= min_numeric_cols:
-            candidate_cols = numeric_mask.columns[numeric_mask.iloc[i]]
+        if num_cols >= min_numeric_cols: #At least a min row of columns (sum of true numeric values) to check the deep of the candidate's data
+            candidate_cols = numeric_mask.columns[numeric_mask.iloc[i]]#Select the columns by the value true or false in the boolean table, row i. Returns an array with the NAMES of the columns, not the columns
 
-            is_consistent = numeric_mask[candidate_cols].iloc[i:i+check_depth].sum()
-            stable_cols_mask = is_consistent == check_depth
-            stable_cols = list(is_consistent.index[stable_cols_mask])
+            is_consistent = check_depth == numeric_mask[candidate_cols].iloc[i:i+check_depth].sum()#For each column, if the depth of numeric values is complete
+            stable_cols = list(is_consistent.index[is_consistent])
 
             if len(stable_cols) >= min_numeric_cols:
                 return i, stable_cols
-    return None  
+    return None
+
