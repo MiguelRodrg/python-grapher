@@ -1,7 +1,9 @@
 Comandos para ejecutar pandas en el entorno virtual:
 
 python3 -m venv venv --without-pip
-source venv/bin/activate 
+source venv/bin/activate
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python get-pip.py --break-system-packages
 pip install pandas matplotlib pint
+
+rm -rf venv

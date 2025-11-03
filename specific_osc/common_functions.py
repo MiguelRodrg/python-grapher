@@ -1,12 +1,12 @@
 from . import osc_data, osc_all
-import re
+# import re
 import pandas as pd
 
 def usual_metadata(table,new_table,namedata,nameall0,father):
     common = False
     if nameall0.lower().startswith("all0"):
         table.attrs=dict(zip(table.iloc[0:,0], table.iloc[0:,1]))
-        # estandarize(table)
+        osc_all.estandarize(table,new_table)
         common = True
     if namedata.lower().startswith("data_"):
         table.attrs = {key: [v1, v2] for key, v1, v2 in zip(table.iloc[0:7, 0], table.iloc[0:7, 1], table.iloc[0:7, 2])}
@@ -15,6 +15,7 @@ def usual_metadata(table,new_table,namedata,nameall0,father):
         new_table.attrs = table.attrs
         df = pd.DataFrame(new_table.attrs)
         df.to_csv(f"{father}/{nameall0}.cvs",index=False,sep='\t')
+        common = True
     print(f"Atributos a exportar: \n{table.attrs}")
     return new_table,common
 

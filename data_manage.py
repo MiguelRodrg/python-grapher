@@ -90,7 +90,7 @@ def leer_cvs2(archivo):
             else:
                 encabezados.append(tabla.iloc[fila-1,columnas[i]])
     new_table.columns = encabezados
-    new_table.attrs,common = usual_metadata(tabla,new_table,archivo.name,archivo.parent.name,archivo.parent.resolve())
+    new_table,common = usual_metadata(tabla,new_table,archivo.name,archivo.parent.name,archivo.parent.resolve())
     return new_table
 
 
